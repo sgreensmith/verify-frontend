@@ -37,3 +37,9 @@ experiments:
           percent: 50
         - name: 'more_info'
           percent: 50
+  - app:
+      alternatives:
+        - name: 'control'
+          percent: 100
+        - name: 'transparency'
+          percent: 0
