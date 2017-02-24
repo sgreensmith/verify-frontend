@@ -70,7 +70,16 @@ class ApplicationController < ActionController::Base
     cookies.encrypted[CookieNames::VERIFY_FRONT_JOURNEY_HINT] = { entity_id: idp_entity_id }.to_json
   end
 
-private
+  def next_page(conditions = [])
+    routes = Rails.application.routes.routes.select do |r|
+      r.requirements == { controller: controller_name, action: action_name, locale: I18n.locale.to_s }
+    end
+    current_page = routes.first.name.gsub(/_#{I18n.locale}$/, '')
+    next_page = JOURNEYS.next(current_page.to_sym, Set.new(conditions))
+    Rails.application.routes.url_helpers.send("#{next_page}_path", locale: I18n.locale)
+    end
+
+  private
 
   def uri_with_query(path, query_string)
     uri = URI(path)

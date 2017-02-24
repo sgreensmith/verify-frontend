@@ -27,6 +27,15 @@ class WillItWorkForMeForm
     above_age_threshold == 'true'
   end
 
+  def conditions
+    {
+      resident_last_12_months: resident_last_12_months?,
+      address_but_not_resident: address_but_not_resident?,
+      no_uk_address: no_uk_address?,
+      above_age_threshold: above_age_threshold?
+    }.select { |_, v| v }.keys
+  end
+
 private
 
   def residency_questions_answered
