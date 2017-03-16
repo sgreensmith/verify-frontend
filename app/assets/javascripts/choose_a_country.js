@@ -11,24 +11,40 @@
 
   GOVUK.chooseACountry = {
     attach: function () {
-      var countries = $('#js-disabled-country-picker')
-        .find('option')
-        .toArray()
-        .map(function (element) { return [element.value, $(element).text()]; })
-        .filter(function (value) { return !!value[0]; });
+      var options = $('#js-disabled-country-picker').find('option');
+
+      var countryValueByText = {};
+      var countryTexts = [];
+      for(var i = 0; i < options.length; i++) {
+        var option = options.eq(i);
+        if (option.val()) {
+          countryValueByText[option.text()] = option.val();
+          countryTexts.push(option.text());
+        }
+      }
 
       function suggest(query, syncResults) {
-        syncResults(query ? countries.map(function(x) { return x[1] } ).filter(stringContains(query)) : [])
+        syncResults(query ? countryTexts.filter(stringContains(query)) : [])
       }
 
       var countryPickerElement = $('#country-picker').get(0);
       window.AccessibleTypeahead({
         element: countryPickerElement,
+        minLength: 2,
+        autoselect: true,
         source: suggest
       });
 
       $('form').submit(function () {
-        // TODO: look up the country code by its text
+        var countryText = $('#typeahead').val();
+        var countryVal = countryValueByText[countryText];
+        if (!countryVal) {
+          // TODO
+          alert('TODO: some UI for this :)');
+        }
+        else {
+          $('input[name="country"]').val(countryVal);
+        }
       })
     }
   };
