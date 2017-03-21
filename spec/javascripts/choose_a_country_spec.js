@@ -1,7 +1,7 @@
 describe('The choose a country page', function () {
   var $dom;
   var html =
-    '<form class="js-hidden">' +
+    '<form id="form-no-js" class="js-hidden">' +
       '<select name="country" id="js-disabled-country-picker" class="form-control-2-3 form-control">' +
         '<option value=""></option>' +
         '<option value="FR">France</option>' +
@@ -9,7 +9,7 @@ describe('The choose a country page', function () {
       '</select>' +
       '<input class="button" type="submit" value="Select"/>' +
     '</form>' +
-    '<form class="js-show">' +
+    '<form id="form-js" class="js-show">' +
       '<div id="country-picker" class="form-control-2-3"></div>' +
       '<input type="hidden" name="country">' +
       '<input class="button" type="submit" value="Select"/>' +
@@ -88,25 +88,25 @@ describe('The choose a country page', function () {
     }, 0);
   });
 
-    it('should not submit form and show country not found error when the user enters invalid country', function (done) {
-      var typeahead = document.getElementById('typeahead');
-      typeahead.value = 'invalid-country';
-      var $form = $('form');
+  it('should not submit form and show country not found error when the user enters invalid country', function (done) {
+    var typeahead = document.getElementById('typeahead');
+    typeahead.value = 'invalid-country';
+    var $form = $('#form-js');
 
-      // NOTE: Unable to assert the form/document is not submitted using spy because of lack of
-      //       event attachment point (a parent).  Possible solution is to capture the event and
-      //       check it is marked as 'preventDefault'.
-      $form.submit(function () {
-        expect($dom.find('#no-country').is(':visible')).toBe(true);
-        done();
-      });
-
-      $form.submit();
+    // NOTE: Unable to assert the form/document is not submitted using spy because of lack of
+    //       event attachment point (a parent).  Possible solution is to capture the event and
+    //       check it is marked as 'preventDefault'.
+    $form.submit(function () {
+      expect($dom.find('#no-country').is(':visible')).toBe(true);
+      done();
     });
+
+    $form.submit();
+  });
 
   it('should submit country=DE when the user selects Germany', function (done) {
     var typeahead = document.getElementById('typeahead');
-    var $form = $('form');
+    var $form = $('#form-js');
 
     var formSpy = jasmine.createSpy('formSpy');
     $(document).submit(formSpy);
@@ -116,6 +116,7 @@ describe('The choose a country page', function () {
       expect($dom.find('input[name=country]').val()).toBe('DE');
       expect(formSpy).toHaveBeenCalled();
       done();
+      return false;
     });
 
     $form.submit();
