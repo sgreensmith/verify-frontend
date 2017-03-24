@@ -134,6 +134,12 @@ private
     @current_identity_providers ||= session[:identity_providers].map { |obj| IdentityProvider.from_session(obj) }
   end
 
+  def current_countries
+    if session[:countries].nil? == false
+      @current_countries ||= session[:countries].map { |obj| Country.from_session(obj) }
+    end
+  end
+
   def report_to_analytics(action_name)
     ANALYTICS_REPORTER.report(request, action_name)
   end
