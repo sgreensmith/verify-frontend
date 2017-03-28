@@ -34,6 +34,10 @@ class FeedbackSourceMapper
   }.freeze
   end
 
+  def is_feedback_source_valid(feedback_source)
+    @page_to_source_mappings[feedback_source].nil? ? false : true
+  end
+
   def page_from_source(feedback_source, locale)
     route_name = route_name_from(feedback_source)
     if route_name =~ /https?:.*/
